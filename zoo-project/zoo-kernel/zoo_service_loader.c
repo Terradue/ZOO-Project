@@ -381,29 +381,34 @@ int addServicesNamespaceToMap(maps* conf){
                         char *namespaceFolder = (char *) malloc(1024);
                         memset(namespaceFolder, '\0', 1024);
                         map *servicesNamespaceParentFolder = getMapFromMaps(conf, "servicesNamespace", "path");
-                        sprintf(namespaceFolder, "%s/%s", servicesNamespaceParentFolder->value, namespaceName);
-                        DIR *dir = opendir(namespaceFolder);
-                        if (dir) {
+			if(servicesNamespaceParentFolder!=NULL){
+			  sprintf(namespaceFolder, "%s/%s", servicesNamespaceParentFolder->value, namespaceName);
+			  DIR *dir = opendir(namespaceFolder);
+			  if (dir) {
                             // creating a zooServicesNamespace map
                             // the map will contain the namespace name
                             maps *_tmpMaps = createMaps("zooServicesNamespace");
                             if (_tmpMaps->content == NULL)
-                                _tmpMaps->content = createMap("namespace", namespaceName);
+			      _tmpMaps->content = createMap("namespace", namespaceName);
                             else
-                                addToMap(_tmpMaps->content, "namespace", namespaceName);
+			      addToMap(_tmpMaps->content, "namespace", namespaceName);
 
                             // adding the zooServicesNamespace map to the other maps
                             if (conf) {
-                                addMapsToMaps(&conf, _tmpMaps);
+			      addMapsToMaps(&conf, _tmpMaps);
+			      freeMaps(&_tmpMaps);
+			      free(_tmpMaps);
+			      _tmpMaps=NULL;
                             }
-                        } else {
+			  } else {
                             map* error=createMap("code","BadRequest");
                             addToMap(error,"message",_("The resource is not available"));
                             printExceptionReportResponseJ(conf,error);
                             ret = 1;
                             freeMap(&error);
                             free(error);
-                        }
+			  }
+			}
                     }
                 }
             }
@@ -430,11 +435,21 @@ void setRootUrlMap(maps* m){
 #endif
 
     if (zooServicesNamespaceMap && zooServicesNamespaceMap->value && strcmp(zooServicesNamespaceMap->value,"generalNamespace") != 0 ){
+      if(rootHost!=NULL){
         rootUrl=(char*) malloc((strlen(rootHost->value)+(strlen(rootPath->value)+ strlen(zooServicesNamespaceMap->value)+13)*sizeof(char)));
         sprintf(rootUrl,"%s/%s/%s",rootHost->value, zooServicesNamespaceMap->value, rootPath->value);
+      }else{
+        rootUrl=(char*) malloc(((strlen(rootPath->value)+ strlen(zooServicesNamespaceMap->value)+13)*sizeof(char)));
+        sprintf(rootUrl,"%s/%s",zooServicesNamespaceMap->value, rootPath->value);
+      }
     } else {
+      if(rootHost!=NULL){
         rootUrl=(char*) malloc((strlen(rootHost->value)+(strlen(rootPath->value)+13)*sizeof(char)));
         sprintf(rootUrl,"%s/%s",rootHost->value, rootPath->value);
+      }else{
+        rootUrl=(char*) malloc(((strlen(rootPath->value)+13)*sizeof(char)));
+	sprintf(rootUrl, "/%s",rootPath->value);
+      }
     }
 
 #ifdef DEBUG
