@@ -436,18 +436,18 @@ void setRootUrlMap(maps* m){
 
     if (zooServicesNamespaceMap && zooServicesNamespaceMap->value && strcmp(zooServicesNamespaceMap->value,"generalNamespace") != 0 ){
       if(rootHost!=NULL){
-        rootUrl=(char*) malloc((strlen(rootHost->value)+(strlen(rootPath->value)+ strlen(zooServicesNamespaceMap->value)+13)*sizeof(char)));
+        rootUrl=(char*) malloc((strlen(rootHost->value)+(strlen(rootPath->value)+ strlen(zooServicesNamespaceMap->value)+3)*sizeof(char)));
         sprintf(rootUrl,"%s/%s/%s",rootHost->value, zooServicesNamespaceMap->value, rootPath->value);
       }else{
-        rootUrl=(char*) malloc(((strlen(rootPath->value)+ strlen(zooServicesNamespaceMap->value)+13)*sizeof(char)));
-        sprintf(rootUrl,"%s/%s",zooServicesNamespaceMap->value, rootPath->value);
+        rootUrl=(char*) malloc(((strlen(rootPath->value)+ strlen(zooServicesNamespaceMap->value)+3)*sizeof(char)));
+        sprintf(rootUrl,"/%s/%s",zooServicesNamespaceMap->value, rootPath->value);
       }
     } else {
       if(rootHost!=NULL){
-        rootUrl=(char*) malloc((strlen(rootHost->value)+(strlen(rootPath->value)+13)*sizeof(char)));
+        rootUrl=(char*) malloc((strlen(rootHost->value)+(strlen(rootPath->value)+2)*sizeof(char)));
         sprintf(rootUrl,"%s/%s",rootHost->value, rootPath->value);
       }else{
-        rootUrl=(char*) malloc(((strlen(rootPath->value)+13)*sizeof(char)));
+        rootUrl=(char*) malloc(((strlen(rootPath->value)+2)*sizeof(char)));
 	sprintf(rootUrl, "/%s",rootPath->value);
       }
     }

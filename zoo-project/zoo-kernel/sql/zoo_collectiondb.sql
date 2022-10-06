@@ -3,7 +3,7 @@
 -- PostgreSQL definition of tables required byt the ZOO-Kernel version >= 1.8.0
 -- if the the metadb is activated
 --
--- Copyright (C) 2018-2022 GeoLabs SARL. All rights reserved.
+-- Copyright (C) 2019-2022 GeoLabs SARL. All rights reserved.
 -- Author: Gérald Fenoy <gerald.fenoy@geolabs.fr>
 --
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
